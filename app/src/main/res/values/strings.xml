@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Projeto Aluno</string>
+    <string name="action_settings">Settings</string>
+    <string name="dialog_caregando">Carregando...</string>
+    <string name="message_excluir_aluno">Excluir %s</string>
+    <string name="yes">Sim</string>
+    <string name="no">Nao</string>
+    <string name="message_aluno_ecluido">O aluno foi excluido!!</string>
+    <string name="title_novo_aluno">Novo Aluno</string>
+    <string name="btn_salvar">Salvar</string>
+    <string name="btn_cancelar">Cancelar</string>
+    <string name="msg_aluno_adicionado">"O aluno %s adicionado!!"</string>
+</resources>
