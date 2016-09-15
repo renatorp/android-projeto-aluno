@@ -1,12 +1,10 @@
 package br.puc.devandroid.projetoaluno.adapter;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +22,6 @@ import java.util.List;
 
 import br.puc.devandroid.projetoaluno.R;
 import br.puc.devandroid.projetoaluno.entity.Aluno;
-import br.puc.devandroid.projetoaluno.entity.AlunosResult;
 import br.puc.devandroid.projetoaluno.service.APIService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,22 +68,28 @@ public class AlunoAdapter extends BaseAdapter{
         TextView txtIdade = (TextView) view.findViewById(R.id.txt_idade_aluno);
         ImageButton btnChamarAluno = (ImageButton) view.findViewById(R.id.btn_chamar_aluno);
         ImageButton btnExcluirAluno = (ImageButton) view.findViewById(R.id.btn_excluir_aluno);
-        ImageView imgImagemAluno = (ImageView) view.findViewById(R.id.img_aluno);
+        final ImageView imgImagemAluno = (ImageView) view.findViewById(R.id.img_aluno);
 
         final Aluno aluno = alunos.get(position);
 
-        txtNome.setText(aluno.getNome());
-        txtEndereco.setText(aluno.getEndereco());
-        txtIdade.setText(aluno.getIdade().toString());
+        if (aluno.getNome() != null) {
+            txtNome.setText(aluno.getNome());
+        }
+
+        if (aluno.getEndereco() != null) {
+            txtEndereco.setText(aluno.getEndereco());
+        }
+
+        if (aluno.getIdade() != null) {
+            txtIdade.setText(aluno.getIdade().toString());
+        }
 
         btnChamarAluno.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
                 callIntent.setData(Uri.parse("tel:"+ aluno.getTelefone()));
-                if (context.checkCallingOrSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                    context.startActivity(callIntent);
-                }
+                context.startActivity(callIntent);
             }
         });
 
@@ -97,24 +100,12 @@ public class AlunoAdapter extends BaseAdapter{
             }
         });
 
+
         Picasso.with(context)
                 .load(aluno.getFotoUrl())
-                .into(imgImagemAluno, new com.squareup.picasso.Callback() {
-                    @Override
-                    public void onSuccess() {
-                        //pDialog.dismiss();
-                        System.out.println("sucesso <<<<<<<<");
-                    }
-
-                    @Override
-                    public void onError() {
-                        //pDialog.dismiss();
-                        System.out.println("nao sucesso <<<<<<<<");
-                    }
-                });
-
-
-
+                .placeholder(R.drawable.loading)
+                .error(R.drawable.sem_imagem)
+                .into(imgImagemAluno);
 
         return view;
     }
@@ -147,9 +138,8 @@ public class AlunoAdapter extends BaseAdapter{
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     alunos.remove(aluno);
-                    // TODO: REMOVE ITEM FROM ADAPTER
-                    ///showAlunos(alunos);
                     Toast.makeText(context, context.getResources().getString(R.string.message_aluno_ecluido), Toast.LENGTH_SHORT).show();
+                    notifyDataSetChanged();
                 } else {
                     Log.e(TAG, response.message());
                 }
