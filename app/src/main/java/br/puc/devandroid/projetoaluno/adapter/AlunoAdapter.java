@@ -100,12 +100,18 @@ public class AlunoAdapter extends BaseAdapter{
             }
         });
 
-
         Picasso.with(context)
                 .load(aluno.getFotoUrl())
                 .placeholder(R.drawable.loading)
                 .error(R.drawable.sem_imagem)
                 .into(imgImagemAluno);
+
+        imgImagemAluno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showGoogleMaps(aluno);
+            }
+        });
 
         return view;
     }
@@ -162,4 +168,13 @@ public class AlunoAdapter extends BaseAdapter{
         pDialog.show();
     }
 
+    private void showGoogleMaps(final Aluno aluno) {
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + Uri.encode(aluno.getEndereco()));
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(mapIntent);
+        } else {
+            Toast.makeText(context, context.getResources().getString(R.string.msg_gmaps_indisponivel), Toast.LENGTH_SHORT).show();
+        }
+    }
 }

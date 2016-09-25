@@ -3,6 +3,8 @@ package br.puc.devandroid.projetoaluno;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -53,14 +55,31 @@ public class MainActivity extends AppCompatActivity {
                 showDialogNovoAluno();
             }
         });
-        initializeAPIService();
-        initilizeListAlunos();
+
+        initialize();
+    }
+
+    private void initialize() {
+        if (!isNetworkAvailable()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setIcon(android.R.drawable.ic_menu_info_details);
+            builder.setMessage(this.getResources().getString(R.string.msg_sem_conexao));
+            builder.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    initialize();
+                }
+            });
+            builder.show();
+        } else {
+            initializeAPIService();
+            initilizeListAlunos();
+        }
     }
 
     private void showDialogNovoAluno() {
         LayoutInflater inflater=getLayoutInflater();
         final View view =inflater.inflate(R.layout.layout_novo_aluno, null);
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(android.R.drawable.ic_menu_edit);
@@ -78,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
-
     }
 
     private void salvarAluno(final Aluno aluno) {
@@ -201,4 +219,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }
