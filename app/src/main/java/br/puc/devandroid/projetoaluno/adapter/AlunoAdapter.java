@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -106,7 +108,9 @@ public class AlunoAdapter extends BaseAdapter{
                 .error(R.drawable.sem_imagem)
                 .into(imgImagemAluno);
 
-        imgImagemAluno.setOnClickListener(new View.OnClickListener() {
+
+        LinearLayout mainLayout = (LinearLayout) view.findViewById(R.id.layoutDadosAluno) ;
+        mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showGoogleMaps(aluno);
