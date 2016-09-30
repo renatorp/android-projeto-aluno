@@ -104,7 +104,7 @@ public class AlunoAdapter extends BaseAdapter{
 
         Picasso.with(context)
                 .load(aluno.getFotoUrl())
-                .placeholder(R.drawable.loading)
+                .placeholder(R.drawable.progress_animation)
                 .error(R.drawable.sem_imagem)
                 .into(imgImagemAluno);
 
