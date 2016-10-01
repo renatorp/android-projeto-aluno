@@ -45,7 +45,7 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/edt_foto_novo_aluno"
-        android:text="https://robohash.org/" />
+        android:text="" />
 
     <TextView
         android:layout_width="wrap_content"
